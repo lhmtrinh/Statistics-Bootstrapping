@@ -1,4 +1,4 @@
-function [bool_nonparam,length_nonparam, bool_param,length_param] = repetition(dist, T, rep, B, true_ES,alpha, confidence_level)
+function [bool_nonparam,length_nonparam, bool_param,length_param] = repetition(dist,param, T, rep, B, true_ES,alpha, confidence_level,parametric_model)
     % Arrays to store actual coverage array and confidence interval lengths
     % Size 1 x number of reps
     bool_nonparam = zeros(1,rep);
@@ -10,10 +10,21 @@ function [bool_nonparam,length_nonparam, bool_param,length_param] = repetition(d
     f = waitbar(0, 'Starting');
     for i=1:rep
         waitbar(i/rep, f, sprintf('Progress for T=%d : %d %%',T,floor(i/rep*100)));
-        
+
         % data generation process
-        % dist is MATLAB dist object, T is number of samples)
-        data= random(dist,T,1);
+        data = zeros(T,1);
+        if dist=="Stable"
+            pdist= makedist("Stable",param(1),param(2),param(3),param(4));
+            data= random(pdist,T,1);
+        end
+        if dist=="T"
+            % Create distribution object for random data generation in repetition()
+            pdist = makedist("tLocationScale","nu",param(1),"mu",param(2),"sigma",param(3));
+            data= random(pdist,T,1);
+        end
+        if dist=="NCT"
+            % do something here
+        end
     
         % calculate confidence intervals for ES with non parametric bootstrap
         ci=non_parametric(data,B,alpha,confidence_level);
@@ -22,8 +33,8 @@ function [bool_nonparam,length_nonparam, bool_param,length_param] = repetition(d
         % calculate coverage array
         bool_nonparam(i) = (true_ES>=ci(1))&(true_ES<=ci(2));
         
-        % calculate confidence intervals for ES with non parametric bootstrap
-        ci=parametric(data,B,alpha,confidence_level);
+        % calculate confidence intervals for ES with parametric bootstrap
+        ci=parametric(data,B,alpha,confidence_level,parametric_model);
         % calculate the lenght of interval
         length_param(i) = ci(2)-ci(1);
         % calculate coverage array
