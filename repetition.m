@@ -1,14 +1,18 @@
 function [bool_nonparam,length_nonparam, bool_param,length_param] = repetition(dist, T, rep, B, true_ES,alpha, confidence_level)
-   
+    % Arrays to store actual coverage array and confidence interval lengths
+    % Size 1 x number of reps
     bool_nonparam = zeros(1,rep);
     length_nonparam = zeros(1,rep);
     bool_param = zeros(1,rep);
     length_param = zeros(1,rep);
     
+    % waitbar so that we can know the progress
     f = waitbar(0, 'Starting');
     for i=1:rep
         waitbar(i/rep, f, sprintf('Progress for T=%d : %d %%',T,floor(i/rep*100)));
+        
         % data generation process
+        % dist is MATLAB dist object, T is number of samples)
         data= random(dist,T,1);
     
         % calculate confidence intervals for ES with non parametric bootstrap
