@@ -9,12 +9,14 @@ function [CIs] = parametric(data,B,alpha,CI_level,parametric_model)
         estimate_param=0;
         if parametric_model == "T"
             estimate_param = MLE_t(sample,[3,0,1]);
+            ESvec(j)=ES_t(estimate_param,alpha);
         end
         if parametric_model == "NCT"
             estimate_param = MLE_nct(sample,[]);
+            ESvec(j)=ES_nct(estimate_param,alpha);
         end
 
-        ESvec(j)=ES_t(estimate_param,alpha);
+        
     end
     % confidence interval
     CIs = quantile(ESvec,[(1-CI_level)/2,1-(1-CI_level)/2]);
