@@ -23,7 +23,10 @@ function [bool_nonparam,length_nonparam, bool_param,length_param] = repetition(d
             data= random(pdist,T,1);
         end
         if dist=="NCT"
-            % do something here
+            % Generate T samples of noncentral t distribution, with
+            % parameters df = param(1), noncentrality parameter mu =
+            % param(2), location = param(3), scale = param(4)
+            data = asymtrnd(T, param(1), param(2), param(3), param(4), i);
         end
     
         % calculate confidence intervals for ES with non parametric bootstrap
