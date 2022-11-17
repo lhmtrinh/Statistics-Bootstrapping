@@ -28,3 +28,4 @@ function ll = nctloglik_dda(param,x)
     pdfln = -log(c)+stdnctpdfln_j(z, df, mu);
     ll = -sum(pdfln);
 end
+

@@ -12,7 +12,7 @@ function [CIs] = parametric(data,B,alpha,CI_level,parametric_model)
             ESvec(j)=ES_t(estimate_param,alpha);
         end
         if parametric_model == "NCT"
-            estimate_param = MLE_nct(sample,[2, -1, 0, 1]);
+            estimate_param = MLE_nct(sample,[6, -2, 0, 1]);
             ESvec(j)=ES_nct(estimate_param,alpha);
         end
 

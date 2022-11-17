@@ -4,6 +4,8 @@ function ES = ES_nct(param,alpha)
     loc = param(3);
     c = param(4);
     c01 = nctinv(alpha,df,mu); % left tail quantile, for loc-0 scale-1
-    ES01 = -nctpdf(c01,df,mu)/nctcdf(c01,df,mu)*(df+c01^2)/(df-1);
-    ES = loc+c*ES01; % true theoretical ES
+    fun = @(x) x.*nctpdf(x,df,mu);
+    ES = integral(fun,-inf,c01,"AbsTol",1e-5)/alpha;
+    ES = ES*c+loc;
 end
+
